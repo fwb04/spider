@@ -2,44 +2,54 @@
 
 import requests
 import json
+import time
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
 
+def gettime():
+    return int(round(time.time() * 1000))
 
 if __name__ == '__main__':
 
-    Cookie = "JSESSIONID=EBF8BACD3FEC0F066623339F04231D7E; u=1; SL_GWPT_Show_Hide_tmp=1; SL_wptGlobTipTmp=1"
-    # 设置动态js的url
-    url = 'http://data.stats.gov.cn/easyquery.htm?m=QueryData&dbcode=hgnd&rowcode=zb&colcode=sj&wds=%5B%5D&dfwds=%5B%7B%22wdcode%22%3A%22sj%22%2C%22valuecode%22%3A%22LAST20%22%7D%5D&k1=1554383870752'
-    # 设置requests请求的 headers
-    headers = {
-        # 'User-agent': random.choice(USER_AGENTS),  # 设置get请求的User-Agent，用于伪装浏览器UA
-        'Cookie': Cookie,
-        'Connection': 'keep-alive',
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'Accept-Encoding': 'gzip, deflate',
-        'Accept-Language': 'zh-CN,zh;q=0.9',
-        'Host': 'data.stats.gov.cn',
-        'Referer': 'http://data.stats.gov.cn/easyquery.htm?cn=C01&zb=A0301&sj=2018'
-    }
+    # 用来自定义头部的
+    headers = {}
+    # 用来传递参数的
+    keyvalue = {}
+    # 目标网址(问号前面的东西)
+    url = 'http://data.stats.gov.cn/easyquery.htm'
 
-    # 设置页面索引
-    pageIndex = 0
-    # 设置url post请求的参数
-    data = {
-        'page': pageIndex,
-        'disclosureType': 8
-    }
+    # 头部的填充
+    headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) ' \
+                            'AppleWebKit/605.1.15 (KHTML, like Gecko) ' \
+                            'Version/12.0 Safari/605.1.15'
 
-    # requests post请求
-    req = requests.post(url, data=data, headers=headers)
-    # print(req.content)
+    # 下面是参数的填充
+    keyvalue['m'] = 'QueryData'
+    keyvalue['dbcode'] = 'hgnd'
+    keyvalue['rowcode'] = 'zb'
+    keyvalue['colcode'] = 'sj'
+    keyvalue['wds'] = '[]'
+    keyvalue['dfwds'] = '[{"wdcode":"zb","valuecode":"A0301"}]'
+    keyvalue['k1'] = str(gettime())
+
+    # 建立一个Session
+    s = requests.session()
+    # 在Session基础上进行一次请求
+    r = s.get(url, params=keyvalue, headers=headers)
+    # 打印返回过来的状态码
+    print(r.status_code)
+    # 修改dfwds字段内容
+    keyvalue['dfwds'] = '[{"wdcode":"sj","valuecode":"LAST20"}]'
+    # 再次进行请求
+    r = s.get(url, params=keyvalue, headers=headers)
+    # 此时我们就能获取到我们搜索到的数据了
+    # print(r.text)
 
     year = []
     population = []
     male = []
     female = []
-    data = json.loads(req.text)
+    data = json.loads(r.text)
     data_one = data['returndata']['datanodes']
     for value in data_one:
         if ('A030101_sj' in value['code']):
@@ -60,18 +70,18 @@ if __name__ == '__main__':
     male.reverse()
     female.reverse()
 
-    fig = plt.figure()  # 创建画布
-    ax = plt.subplot()  # 创建图片区域
-    plt.grid(color='lightgrey', ls='--')
-    plt.ylim(125000, 140000)
-    plt.rcParams['font.sans-serif'] = ['SimHei']
-    plt.rcParams['axes.unicode_minus'] = False
-    ax.bar(year, population, align='edge', color='sandybrown', edgecolor='white')
-    plt.xlabel(u'年份')
-    plt.ylabel(u'万人')
-    plt.title(u'1999-2018年末总人口')
-    plt.show()
-
-    plt.plot(year, male)
-    plt.plot(year, female)
-    plt.show()
+    # fig = plt.figure()  # 创建画布
+    # ax = plt.subplot()  # 创建图片区域
+    # plt.grid(color='lightgrey', ls='--')
+    # plt.ylim(125000, 140000)
+    # plt.rcParams['font.sans-serif'] = ['SimHei']
+    # plt.rcParams['axes.unicode_minus'] = False
+    # ax.bar(year, population, align='edge', color='sandybrown', edgecolor='white')
+    # plt.xlabel(u'年份')
+    # plt.ylabel(u'万人')
+    # plt.title(u'1999-2018年末总人口')
+    # plt.show()
+    #
+    # plt.plot(year, male)
+    # plt.plot(year, female)
+    # plt.show()
