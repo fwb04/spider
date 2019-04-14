@@ -3,8 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="18634b85-a55b-4f86-9d1f-80bc03651be4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CPI.db" beforeDir="false" afterPath="$PROJECT_DIR$/CPI.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CPI.py" beforeDir="false" afterPath="$PROJECT_DIR$/CPI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/population.db" beforeDir="false" afterPath="$PROJECT_DIR$/population.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spysql.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/population.py" beforeDir="false" afterPath="$PROJECT_DIR$/population.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,18 +16,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/population.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1275" />
+            <state relative-caret-position="128">
+              <caret line="108" selection-start-line="108" selection-end-line="119" selection-end-column="14" />
+            </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CPI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3272">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="303">
+              <caret line="179" column="17" selection-start-line="179" selection-start-column="17" selection-end-line="179" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -47,10 +51,12 @@
       <list>
         <option value="$PROJECT_DIR$/spysql.py" />
         <option value="$PROJECT_DIR$/CPIdata.py" />
+        <option value="$PROJECT_DIR$/population.py" />
+        <option value="$PROJECT_DIR$/CPI.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="192" />
     <option name="y" value="21" />
     <option name="width" value="1452" />
@@ -93,7 +99,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.123">
+  <component name="RunManager" selected="Python.CPI">
     <configuration name="123" type="PythonConfigurationType" factoryName="Python">
       <module name="spydersql" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -183,15 +189,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1233" height="735" extended-state="7" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1233" height="735" extended-state="6" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.24979115" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" x="52" y="185" width="984" height="356" id="Run" order="2" type="FLOATING" weight="0.3283582" />
+      <window_info anchor="bottom" x="37" y="205" width="984" height="356" id="Run" order="2" type="FLOATING" weight="0.3283582" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -206,36 +211,20 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/spysql.py">
+    <entry file="file://$PROJECT_DIR$/spysql.py" />
+    <entry file="file://$PROJECT_DIR$/CPIdata.py" />
+    <entry file="file://$PROJECT_DIR$/population.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="99" column="33" lean-forward="true" selection-start-line="99" selection-start-column="33" selection-end-line="99" selection-end-column="33" />
-          <folding>
-            <element signature="e#25#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CPIdata.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
-          <folding>
-            <element signature="e#25#40#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="128">
+          <caret line="108" selection-start-line="108" selection-end-line="119" selection-end-column="14" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CPI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3272">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="303">
+          <caret line="179" column="17" selection-start-line="179" selection-start-column="17" selection-end-line="179" selection-end-column="17" />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/population.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1275" />
       </provider>
     </entry>
   </component>

@@ -60,10 +60,10 @@ def getpopulation():
         if ('A030103_sj' in value['code']):
             female.append(int(value['data']['strdata']))
 
-    print(year)
-    print(population)
-    print(male)
-    print(female)
+    # print(year)
+    # print(population)
+    # print(male)
+    # print(female)
 
     # 数组逆序存放
     year.reverse()
@@ -76,8 +76,11 @@ def getpopulation():
     cur = conn.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS population
               (year text, popu int, male int, female int)''')
-    for i in range(len(year)):
-        cur.execute("INSERT INTO population VALUES ('%s','%d','%d','%d')" % (year[i], population[i], male[i], female[i]))
+    cur.execute('select * from population ')
+    data = cur.fetchall()
+    if data == []:
+        for i in range(len(year)):
+            cur.execute("INSERT INTO population VALUES ('%s','%d','%d','%d')" % (year[i], population[i], male[i], female[i]))
     # cur.execute("INSERT INTO population VALUES ('2009',1,2,3)")
     # y = ('2009',)
     # cur.execute('SELECT * FROM population WHERE year=?', y)
@@ -85,6 +88,36 @@ def getpopulation():
     conn.commit()
     cur.close()
     conn.close()
+
+def plot1(year, population):
+    # fig = plt.figure()  # 创建画布
+    plt.figure(figsize=(10, 6))
+    ax = plt.subplot()  # 创建图片区域
+    # plt.grid(color='lightgrey', ls='--')
+    plt.ylim(125000, 140000)
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    plt.rcParams['axes.unicode_minus'] = False
+    ax.bar(year, population, align='center', color='sandybrown', edgecolor='white')
+    for a, b in zip(year, population):
+        plt.text(a, b + 0.05, '%.0f' % b, ha='center', va='bottom', fontsize=11)
+    plt.xlabel(u'年份')
+    plt.xticks(rotation=45)
+    plt.ylabel(u'万人')
+    plt.title(u'1999-2018年末总人口条形图')
+    plt.show()
+
+def plot2(year, male, female):
+    plt.figure(figsize=(10, 5))
+    ax = plt.subplot()  # 创建图片区域
+    plt.title("1999-2018年全国男性人口和女性人口数变化折线图")
+    plt.xlabel(u'年份')
+    plt.xticks(rotation=45)
+    plt.ylabel(u'万人')
+    line1, = plt.plot(year, male)
+    line2, = plt.plot(year, female)
+    plt.legend((line1, line2), ('男性人口', "女性人口"))
+    plt.grid(color='lightgrey', ls='--')
+    plt.show()
 
 def plotdata():
     conn = sqlite3.connect("population.db")
@@ -98,22 +131,13 @@ def plotdata():
     population = [i[1] for i in data]
     male = [i[2] for i in data]
     female = [i[3] for i in data]
+    print(population)
+    print(male)
+    print(female)
 
-    fig = plt.figure()  # 创建画布
-    ax = plt.subplot()  # 创建图片区域
-    plt.grid(color='lightgrey', ls='--')
-    plt.ylim(125000, 140000)
-    plt.rcParams['font.sans-serif'] = ['SimHei']
-    plt.rcParams['axes.unicode_minus'] = False
-    ax.bar(year, population, align='edge', color='sandybrown', edgecolor='white')
-    plt.xlabel(u'年份')
-    plt.ylabel(u'万人')
-    plt.title(u'1999-2018年末总人口')
-    plt.show()
+    plot1(year, population)
 
-    plt.plot(year, male)
-    plt.plot(year, female)
-    plt.show()
+    plot2(year, male, female)
 
 
 if __name__ == '__main__':

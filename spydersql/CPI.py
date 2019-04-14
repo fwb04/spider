@@ -114,23 +114,51 @@ def getCPI():
     cityCPI.reverse()
     countryCPI.reverse()
 
-    print(year)
-    print(consumerlevel)
-    print(CPI)
-    print(cityCPI)
-    print(countryCPI)
 
     # 连接数据库，不存在时自动创建
     conn = sqlite3.connect("CPI.db")
     cur = conn.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS CPI
                   (year text, consumerlevel real, CPI real, countryCPI real, cityCPI real)''')
-    for i in range(len(year)):
-        cur.execute(
-            "INSERT INTO CPI VALUES ('%s','%f','%f','%f','%f')" % (year[i], consumerlevel[i], CPI[i], countryCPI[i], cityCPI[i]))
+    cur.execute('select * from CPI ')
+    data = cur.fetchall()
+    if data == []:
+        for i in range(len(year)):
+            cur.execute(
+                "INSERT INTO CPI VALUES ('%s','%f','%f','%f','%f')" % (year[i], consumerlevel[i], CPI[i], countryCPI[i], cityCPI[i]))
     conn.commit()
     cur.close()
     conn.close()
+
+def plot1(year, consumerlevel):
+    # fig = plt.figure()  # 创建画布
+    plt.figure(figsize=(12, 6))
+    ax = plt.subplot()  # 创建图片区域
+    # plt.grid(color='lightgrey', ls='--')
+    plt.ylim(2000, 25000)
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    plt.rcParams['axes.unicode_minus'] = False
+    ax.bar(year, consumerlevel, align='center', color='sandybrown', edgecolor='white')
+    for a, b in zip(year, consumerlevel):
+        plt.text(a, b + 0.05, '%.1f' % b, ha='center', va='bottom', fontsize=11)
+    plt.xlabel(u'年份')
+    plt.xticks(rotation=45)
+    plt.ylabel(u'元')
+    plt.title(u'1999-2017年居民消费水平条形图')
+    plt.show()
+
+def plot2(year, countryCPI, cityCPI):
+    plt.figure(figsize=(10, 5))
+    ax = plt.subplot()  # 创建图片区域
+    plt.title("1999-2018年全国男性人口和女性人口数变化折线图")
+    plt.xlabel(u'年份')
+    plt.xticks(rotation=45)
+    plt.ylabel(u'万人')
+    line1, = plt.plot(year, countryCPI)
+    line2, = plt.plot(year, cityCPI)
+    plt.legend((line1, line2), ('男性人口', "女性人口"))
+    plt.grid(color='lightgrey', ls='--')
+    plt.show()
 
 def plotdata():
     conn = sqlite3.connect("CPI.db")
@@ -146,6 +174,13 @@ def plotdata():
     CPI = [i[2] for i in data]
     countryCPI = [i[3] for i in data]
     cityCPI = [i[4] for i in data]
+    print(year)
+    print(cousumerlevel)
+    print(countryCPI)
+    print(cityCPI)
+
+    plot1(year, cousumerlevel)
+    plot2(year, countryCPI, cityCPI)
 
 if __name__ == '__main__':
 
