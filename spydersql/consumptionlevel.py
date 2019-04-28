@@ -7,10 +7,12 @@ import sqlite3
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
 
+# 获取时间戳
 def gettime():
     return int(round(time.time() * 1000))
 
-def getCPI():
+# 从国家统计局爬取居民消费水平数据
+def getcl():
     # 用来自定义头部的
     headers = {}
     # 用来传递参数的
@@ -97,34 +99,32 @@ def getCPI():
     citycl.reverse()
     countrycl.reverse()
 
-    print(consumerlevel)
-    print(countrycl)
-    print(citycl)
-
-
     # 连接数据库，不存在时自动创建
-    conn = sqlite3.connect("cosumerlevel.db")
+    conn = sqlite3.connect("consumptionlevel.db")
     cur = conn.cursor()
-    cur.execute('''CREATE TABLE IF NOT EXISTS cosumerlevel
+    cur.execute('''CREATE TABLE IF NOT EXISTS consumptionlevel
                   (year text, consumerlevel real, countrycl real, citycl real)''')
-    cur.execute('select * from cosumerlevel ')
+    cur.execute('select * from consumptionlevel ')
     data = cur.fetchall()
     if data == []:
         for i in range(len(year)):
             cur.execute(
-                "INSERT INTO cosumerlevel VALUES ('%s','%f','%f','%f')" % (year[i], consumerlevel[i], countrycl[i], citycl[i]))
+                "INSERT INTO consumptionlevel VALUES ('%s','%f','%f','%f')" % (year[i], consumerlevel[i], countrycl[i], citycl[i]))
     conn.commit()
     cur.close()
     conn.close()
 
+# 作年份-居民消费水平条形图
 def plot1(year, consumerlevel):
 
     plt.figure(figsize=(12, 6))
     ax = plt.subplot()  # 创建图片区域
+    # 设置Y轴坐标范围
     plt.ylim(2000, 25000)
     plt.rcParams['font.sans-serif'] = ['SimHei']
     plt.rcParams['axes.unicode_minus'] = False
     ax.bar(year, consumerlevel, align='center', color='darkseagreen', edgecolor='white')
+
     for a, b in zip(year, consumerlevel):
         plt.text(a, b + 0.05, '%.1f' % b, ha='center', va='bottom', fontsize=10)
     plt.xlabel(u'年份')
@@ -133,7 +133,9 @@ def plot1(year, consumerlevel):
     plt.title(u'1999-2017年居民消费水平条形图')
     plt.show()
 
+# 作年份-城镇相对农村消费水平折线图
 def plot2(year, countrycl, citycl):
+    # 计算城镇相对农村消费水平并存入r
     r = []
     for i in range(len(countrycl)):
         r.append(citycl[i] / countrycl[i])
@@ -143,39 +145,38 @@ def plot2(year, countrycl, citycl):
     plt.title("1999-2018年城市居民消费水平相对农村变化折线图（农村=1）")
     plt.xlabel(u'年份')
     plt.xticks(rotation=45)
-    plt.ylabel(u'1')
+    plt.ylabel(u'相对大小')
     plt.plot(year, r)
+
     for a, b in zip(year, r):
         plt.text(a, b + 0.03, '%.2f' % b, ha='center', va='bottom', fontsize=9)
-    # plt.fill_between(year, r, interpolate=True, color='lishtgreen', alpha=0.5)
+
     plt.grid(color='whitesmoke', ls='--')
     plt.show()
 
+# 作图
 def plotdata():
-    conn = sqlite3.connect("cosumerlevel.db")
+    # 从数据库中读取数据
+    conn = sqlite3.connect("consumptionlevel.db")
     cur = conn.cursor()
-    cur.execute('select * from cosumerlevel ')
+    cur.execute('select * from consumptionlevel ')
     data = cur.fetchall()
     cur.close()
     conn.close()
     print(data)
 
     year = [i[0] for i in data]
-    cousumerlevel = [i[1] for i in data]
+    consumerlevel = [i[1] for i in data]
     countrycl = [i[2] for i in data]
     citycl = [i[3] for i in data]
-    # print(year)
-    # print(cousumerlevel)
-    # print(countrycl)
-    # print(citycl)
 
-    plot1(year, cousumerlevel)
+    plot1(year, consumerlevel)
     plot2(year, countrycl, citycl)
 
 if __name__ == '__main__':
 
-    # 从国家统计局获取人口数据并存入本地数据库cosumerlevel.db
-    # getCPI()
+    # 从国家统计局获取居民消费水平数据并存入本地数据库consumptionlevel.db
+    getcl()
 
     # 作图
     plotdata()
