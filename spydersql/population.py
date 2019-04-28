@@ -35,13 +35,14 @@ def getpopulation():
     # 建立一个Session
     s = requests.session()
     # 在Session基础上进行一次请求
-    r = s.get(url, params=keyvalue, headers=headers)
+    r = s.post(url, params=keyvalue, headers=headers)
 
     # 修改dfwds字段内容
     keyvalue['dfwds'] = '[{"wdcode":"sj","valuecode":"LAST20"}]'
     # 再次进行请求
     r = s.get(url, params=keyvalue, headers=headers)
-
+    r.encoding = 'utf-8'
+    print(r.text)
     # 定义人口数据存储数组
     year = []
     population = []
@@ -60,10 +61,10 @@ def getpopulation():
         if ('A030103_sj' in value['code']):
             female.append(int(value['data']['strdata']))
 
-    # print(year)
-    # print(population)
-    # print(male)
-    # print(female)
+    print(year)
+    print(population)
+    print(male)
+    print(female)
 
     # 数组逆序存放
     year.reverse()
@@ -97,7 +98,7 @@ def plot1(year, population):
     plt.ylim(125000, 140000)
     plt.rcParams['font.sans-serif'] = ['SimHei']
     plt.rcParams['axes.unicode_minus'] = False
-    ax.bar(year, population, align='center', color='sandybrown', edgecolor='white')
+    ax.bar(year, population, align='center', color='darkseagreen', edgecolor='white')
     for a, b in zip(year, population):
         plt.text(a, b + 0.05, '%.0f' % b, ha='center', va='bottom', fontsize=11)
     plt.xlabel(u'年份')
@@ -107,16 +108,24 @@ def plot1(year, population):
     plt.show()
 
 def plot2(year, male, female):
+    r1 = []
+    r2 = []
+    for i in range(len(male)):
+        r1.append(male[i] / (male[i] + female[i]))
+        r2.append(female[i] / (male[i] + female[i]))
     plt.figure(figsize=(10, 5))
+    # plt.ylim(0, 1)
     ax = plt.subplot()  # 创建图片区域
-    plt.title("1999-2018年全国男性人口和女性人口数变化折线图")
+    plt.title("1999-2018年全国男性人口和女性人口占比变化折线图")
     plt.xlabel(u'年份')
     plt.xticks(rotation=45)
-    plt.ylabel(u'万人')
-    line1, = plt.plot(year, male)
-    line2, = plt.plot(year, female)
-    plt.legend((line1, line2), ('男性人口', "女性人口"))
-    plt.grid(color='lightgrey', ls='--')
+    plt.ylabel(u'1')
+    line1, = plt.plot(year, r1)
+    line2, = plt.plot(year, r2)
+    for a, b in zip(year, r1):
+        plt.text(a, b + 0.03, '%.2f' % b, ha='center', va='bottom', fontsize=9)
+    plt.legend((line1, line2), ('男性人口占比', "女性人口占比"))
+    plt.grid(color='whitesmoke', ls='--')
     plt.show()
 
 def plotdata():
@@ -143,7 +152,7 @@ def plotdata():
 if __name__ == '__main__':
 
     # 从国家统计局获取人口数据并存入本地数据库population.db
-    getpopulation()
+    # getpopulation()
 
     # 作图
     plotdata()
